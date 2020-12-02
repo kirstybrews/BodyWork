@@ -11,8 +11,14 @@ class User < ActiveRecord::Base
     # end 
 
     def self.find_name(user_name)
-       user = self.find_by(name: user_name) 
-        p "Welcome #{user.name}"
+       user = self.find_by(name: user_name)
+       if !user
+        new_user = self.create(name: user_name)
+        # puts "Welcome, #{new_user.name}!"
+       else
+        user
+        # puts "Welcome back, #{user.name}!"
+       end
     end 
 
 end 
