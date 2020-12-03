@@ -56,7 +56,11 @@ workout = if selected_exercise == "See All Exercises"
 
     if view_record == "Yes"
         last_record = selected_user.records.last
-        puts "#{last_record.id}"
+        exercise = Exercise.find_by(id: last_record.id)
+        puts "#{last_record.exercise.name}"
+        puts "#{last_record.weight}"
+        puts "#{last_record.sets}"
+        puts "#{last_record.total_reps}"
     end
 
 elsif selected_exercise == "See My Exercises"
@@ -87,6 +91,20 @@ elsif selected_exercise == "See My Exercises"
           end
         Record.create(user_id: selected_user.id, exercise_id: exercise_id, weight: weight, sets: sets, total_reps: total_reps)
         puts "Your record was saved!"
+    end
+
+    view_record = prompt.select("Would you like to view your last record?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+
+    if view_record == "Yes"
+        last_record = selected_user.records.last
+        exercise = Exercise.find_by(id: last_record.id)
+        puts "#{last_record.exercise.name}"
+        puts "#{last_record.weight}"
+        puts "#{last_record.sets}"
+        puts "#{last_record.total_reps}"
     end
 
 #     if 
@@ -132,6 +150,20 @@ if selected_exercise == "Create New Exercise"
           end
         Record.create(user_id: selected_user.id, exercise_id: new_exercise.id, weight: weight, sets: sets, total_reps: total_reps)
         puts "Your record was saved!"
+    end
+
+    view_record = prompt.select("Would you like to view your last record?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+
+    if view_record == "Yes"
+        last_record = selected_user.records.last
+        exercise = Exercise.find_by(id: last_record.id)
+        puts "#{last_record.exercise.name}"
+        puts "#{last_record.weight}"
+        puts "#{last_record.sets}"
+        puts "#{last_record.total_reps}"
     end
 end
 
