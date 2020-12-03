@@ -21,13 +21,13 @@ selected_user = User.find_name(user_input)
 
 puts "Welcome, #{selected_user.name}!"
 #Welcome message to user
-
 selected_exercise = prompt.select("What would you like to do?") do | menu |
     menu.choice "See All Exercises"
     menu.choice "See My Exercises"
     menu.choice "Create New Exercise"
     menu.choice "View My Stats"
-end
+    end
+
 #Giving user menu options
 
     
@@ -248,6 +248,7 @@ if selected_exercise == "View My Stats"
         puts "Your Weakest Exercise is #{exercise.name} at a weight of #{min_weight}lbs."
         
     end
+    
     if  chosen_stat == "My Personal Records"
             user_exercises = selected_user.exercises.uniq
             exercise_id = prompt.select("Pick an exercise:") do | menu | 
@@ -258,11 +259,6 @@ if selected_exercise == "View My Stats"
             selected_user.personal_record(exercise_id)
     end  
 end 
+#user is able to view its personal records 
 
-
-
-
-
- 
-binding.pry 
-0
+puts "See you next time!"
