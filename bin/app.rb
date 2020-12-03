@@ -49,6 +49,16 @@ workout = if selected_exercise == "See All Exercises"
         puts "Your record was saved!"
     end
 
+    view_record = prompt.select("Would you like to view your last record?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+
+    if view_record == "Yes"
+        last_record = selected_user.records.last
+        puts "#{last_record.id}"
+    end
+
 elsif selected_exercise == "See My Exercises"
     user_exercises = selected_user.exercises
     exercise_id = prompt.select("Pick an exercise:") do | menu |
@@ -84,12 +94,12 @@ elsif selected_exercise == "See My Exercises"
 #         #we want to return the objects of exercise class
 end
     
-exercise_info = Exercise.find_by(id: workout) 
-    # puts exercise_info.name 
-    #  binding.pry 
-    #[#<Exercise id: 9, name: "Crunches", category: "Bodyweight", instructions: "https://www.google.com/url?client=internal-element...">]
+# exercise_info = Exercise.find_by(id: workout) 
+#     # puts exercise_info.name 
+#     #  binding.pry 
+#     #[#<Exercise id: 9, name: "Crunches", category: "Bodyweight", instructions: "https://www.google.com/url?client=internal-element...">]
     
-p exercise_info
+# p exercise_info
 
 if selected_exercise == "Create New Exercise"
     exercise_name = prompt.ask("What is the name of the exercise?")
@@ -132,14 +142,14 @@ end
     # puts exercise_info.instructions 
 
     # we want the user to be able to cheks it records
-user_records = selected_user.records
-p user_records
+# user_records = selected_user.records
+# p user_records
 
 
 
 
 
-    
+   
 
 
 
