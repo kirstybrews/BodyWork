@@ -20,25 +20,68 @@ selected_exercise = prompt.select("Which exercises would you like to do?") do | 
 end
 
     
-    
-workout = if selected_exercise == "All Exercises"
+workout = if selected_exercise == "See All Exercises"
     all_exercises = Exercise.all
-    prompt.select("Pick an exercise:") do | menu |
+    exercise_id = prompt.select("Pick an exercise:") do | menu |
         all_exercises.each do | exercise |
             menu.choice exercise.name, exercise.id
         end
     end
-elsif selected_exercise == "My Exercises"
+    create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+    
+    if create_new_record == "Yes"
+        weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        sets = prompt.ask("How many sets did you do?", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        total_reps = prompt.ask("Input your total reps:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        Record.create(user_id: selected_user.id, exercise_id: exercise_id, weight: weight, sets: sets, total_reps: total_reps)
+        puts "Your record was saved!"
+    end
+
+elsif selected_exercise == "See My Exercises"
     user_exercises = selected_user.exercises
-    prompt.select("Pick an exercise:") do | menu |
+    exercise_id = prompt.select("Pick an exercise:") do | menu |
         # binding.pry 
         user_exercises.each do | exercise |
             menu.choice exercise.name, exercise.id
         end
     end
-    if 
-        #if user picks "squats"
-        #we want to return the objects of exercise class
+    create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+    
+    if create_new_record == "Yes"
+        weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        sets = prompt.ask("How many sets did you do?", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        total_reps = prompt.ask("Input your total reps:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        Record.create(user_id: selected_user.id, exercise_id: exercise_id, weight: weight, sets: sets, total_reps: total_reps)
+        puts "Your record was saved!"
+    end
+
+#     if 
+#         #if user picks "squats"
+#         #we want to return the objects of exercise class
 end
     
 exercise_info = Exercise.find_by(id: workout) 
@@ -48,7 +91,7 @@ exercise_info = Exercise.find_by(id: workout)
     
 p exercise_info
 
-new_exercise = if selected_exercise == "Create New Exercise"
+if selected_exercise == "Create New Exercise"
     exercise_name = prompt.ask("What is the name of the exercise?")
     category = prompt.select("What is the exercise category?") do | menu |
         menu.choice "Bodyweight"
@@ -58,16 +101,28 @@ new_exercise = if selected_exercise == "Create New Exercise"
         menu.choice "Kettlebells"
     end
     instructions = prompt.ask("Please include some instructions?")
-    Exercise.create(name: exercise_name, category: category, instructions: instructions)
-end
-
-create_new_record = prompt.ask?("Would you like to log your exercise?") do | menu |
-    menu.choice "Yes"
-    menu.choice "No"
-end
-
-if create_new_record == "Yes"
-    new_record = Record.create(user_id: selected_user.id, exercise_id: .id, weight: 0, sets: 3, total_reps: 15)
+    new_exercise = Exercise.create(name: exercise_name, category: category, instructions: instructions)
+    create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
+    
+    if create_new_record == "Yes"
+        weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        sets = prompt.ask("How many sets did you do?", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        total_reps = prompt.ask("Input your total reps:", convert: :integer) do |q|
+            q.convert :integer
+            q.messages[:convert?] = "Please enter a number."
+          end
+        Record.create(user_id: selected_user.id, exercise_id: new_exercise.id, weight: weight, sets: sets, total_reps: total_reps)
+        puts "Your record was saved!"
+    end
 end
 
 
