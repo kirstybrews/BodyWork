@@ -27,6 +27,13 @@ workout = if selected_exercise == "See All Exercises"
             menu.choice exercise.name, exercise.id
         end
     end
+
+    puts "Here is your chosen exercise:"
+    exercise = Exercise.find_by(id: exercise_id)
+    puts "#{exercise.name}"
+    puts "#{exercise.category}"
+    puts "#{exercise.instructions}"
+
     create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
@@ -64,13 +71,20 @@ workout = if selected_exercise == "See All Exercises"
     end
 
 elsif selected_exercise == "See My Exercises"
-    user_exercises = selected_user.exercises
+    user_exercises = selected_user.exercises.uniq
     exercise_id = prompt.select("Pick an exercise:") do | menu |
         # binding.pry 
         user_exercises.each do | exercise |
             menu.choice exercise.name, exercise.id
         end
     end
+
+    puts "Here is your chosen exercise:"
+    exercise = Exercise.find_by(id: exercise_id)
+    puts "#{exercise.name}"
+    puts "#{exercise.category}"
+    puts "#{exercise.instructions}"
+
     create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
@@ -134,6 +148,11 @@ if selected_exercise == "Create New Exercise"
         menu.choice "Yes"
         menu.choice "No"
     end
+
+    puts "Here is your new exercise!"
+    puts "#{new_exercise.name}"
+    puts "#{new_exercise.category}"
+    puts "#{new_exercise.instructions}"
     
     if create_new_record == "Yes"
         weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
