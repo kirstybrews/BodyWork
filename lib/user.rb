@@ -1,3 +1,4 @@
+require 'pry'
 class User < ActiveRecord::Base
     has_many :records
     has_many :exercises, through: :records
@@ -20,5 +21,19 @@ class User < ActiveRecord::Base
         # puts "Welcome back, #{user.name}!"
        end
     end 
+
+    def personal_record(exercise_id)
+        exercise = Exercise.find_by(id: exercise_id)
+        exercise_array = self.records.select do | record |
+            record.exercise_id == exercise_id
+        end 
+        weights = exercise_array.map do | record |
+            record.weight
+        end 
+        # binding.pry 
+        max_weight = weights.max 
+        puts "Your PR for #{exercise.name} is #{max_weight}lbs."
+    end 
+
 
 end 

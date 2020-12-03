@@ -216,12 +216,50 @@ if selected_exercise == "Create New Exercise"
     #and total reps of last session
 end
 
+if selected_exercise == "View My Stats"
+    chosen_stat = prompt.select("Pick a Stat") do | menu |
+        menu.choice "Strongest Exercise"
+        menu.choice "Weakest Exercise"
+        menu.choice "My Personal Records"
+    end 
+    if chosen_stat == "Strongest Exercise"
+        max_weight = 0
+        exercise_id = nil
+            selected_user.records.each do |record| 
+                if record.weight > max_weight
+                    max_weight = record.weight 
+                    exercise_id = record.exercise_id
+            end  
+        end 
+        exercise = Exercise.find_by(id: exercise_id)
+        puts "Your Strongest Exercise is #{exercise.name} at a weight of #{max_weight}lbs."
+        
+    end 
+    if chosen_stat == "Weakest Exercise"
+        min_weight = 1000
+        exercise_id = nil
+            selected_user.records.each do |record| 
+                if record.weight < min_weight
+                    min_weight = record.weight 
+                    exercise_id = record.exercise_id
+            end  
+        end 
+        exercise = Exercise.find_by(id: exercise_id)
+        puts "Your Weakest Exercise is #{exercise.name} at a weight of #{min_weight}lbs."
+        
+    end
+    if  chosen_stat == "My Personal Records"
+            user_exercises = selected_user.exercises.uniq
+            exercise_id = prompt.select("Pick an exercise:") do | menu | 
+                user_exercises.each do | exercise |
+                    menu.choice exercise.name, exercise.id
+                end
+            end
+            selected_user.personal_record(exercise_id)
+    end  
+end 
 
 
-
-
-
-   
 
 
 
