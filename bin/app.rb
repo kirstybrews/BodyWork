@@ -8,36 +8,50 @@ puts "~~~~~~~~~~~~~~~~~~~~~~~~~"
 puts "} Welcome to BodyWork! {"
 puts "~~~~~~~~~~~~~~~~~~~~~~~~~"
 puts 
-user_input = prompt.ask("What is your name?")
+
+user_input = prompt.ask("What is your name?") do |q|
+    q.required true
+    q.validate /\A\w+\Z/
+    q.modify   :capitalize
+  end  
+  #Requiring a user to enter their name
 
 selected_user = User.find_name(user_input)
-#binding.pry
+#Setting a variable to store our user object
 
-selected_exercise = prompt.select("Which exercises would you like to do?") do | menu |
+puts "Welcome, #{selected_user.name}!"
+#Welcome message to user
+
+selected_exercise = prompt.select("What would you like to do?") do | menu |
     menu.choice "See All Exercises"
     menu.choice "See My Exercises"
     menu.choice "Create New Exercise"
+    menu.choice "View My Stats"
 end
+#Giving user menu options
 
     
-workout = if selected_exercise == "See All Exercises"
+if selected_exercise == "See All Exercises"
     all_exercises = Exercise.all
     exercise_id = prompt.select("Pick an exercise:") do | menu |
         all_exercises.each do | exercise |
             menu.choice exercise.name, exercise.id
         end
     end
+    #User is able to view a list of all exercises and choose an exercise
 
     puts "Here is your chosen exercise:"
     exercise = Exercise.find_by(id: exercise_id)
     puts "#{exercise.name}"
-    puts "#{exercise.category}"
-    puts "#{exercise.instructions}"
+    puts "Category: #{exercise.category}"
+    puts "Instructions: #{exercise.instructions}"
+    #Display of chosen exercise
 
     create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #Asks user if they would like to make a record of this exercise
     
     if create_new_record == "Yes"
         weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
@@ -55,40 +69,50 @@ workout = if selected_exercise == "See All Exercises"
         Record.create(user_id: selected_user.id, exercise_id: exercise_id, weight: weight, sets: sets, total_reps: total_reps)
         puts "Your record was saved!"
     end
+    #If user selects 'yes', user will have to input the weight used, sets, and total reps. 
+    #Creates a new record for the user.
 
     view_record = prompt.select("Would you like to view your last record?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #Asks user if they would like to see their last recorded exercise
 
     if view_record == "Yes"
         last_record = selected_user.records.last
         exercise = Exercise.find_by(id: last_record.id)
         puts "#{last_record.exercise.name}"
-        puts "#{last_record.weight}"
-        puts "#{last_record.sets}"
-        puts "#{last_record.total_reps}"
+        puts "Weight: #{last_record.weight}"
+        puts "Sets: #{last_record.sets}"
+        puts "Total Reps: #{last_record.total_reps}"
     end
+    #If 'yes', user is able to see the name of the exercise, weight, sets, 
+    #and total reps of last session
+end
+#
 
-elsif selected_exercise == "See My Exercises"
+if selected_exercise == "See My Exercises"
     user_exercises = selected_user.exercises.uniq
-    exercise_id = prompt.select("Pick an exercise:") do | menu |
-        # binding.pry 
+    exercise_id = prompt.select("Pick an exercise:") do | menu | 
         user_exercises.each do | exercise |
             menu.choice exercise.name, exercise.id
         end
     end
+    #User is able to view a list of exercises they have done in past sessions
+    #and choose an exercise
 
     puts "Here is your chosen exercise:"
     exercise = Exercise.find_by(id: exercise_id)
     puts "#{exercise.name}"
-    puts "#{exercise.category}"
-    puts "#{exercise.instructions}"
+    puts "Category: #{exercise.category}"
+    puts "Instructions: #{exercise.instructions}"
+    #Display of chosen exercise
 
     create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #Asks user if they would like to make a record of this exercise
     
     if create_new_record == "Yes"
         weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
@@ -106,35 +130,32 @@ elsif selected_exercise == "See My Exercises"
         Record.create(user_id: selected_user.id, exercise_id: exercise_id, weight: weight, sets: sets, total_reps: total_reps)
         puts "Your record was saved!"
     end
+    #If user selects 'yes', user will have to input the weight used, sets, and total reps. 
+    #Creates a new record for the user.
 
     view_record = prompt.select("Would you like to view your last record?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #Asks user if they would like to see their last recorded exercise
 
     if view_record == "Yes"
         last_record = selected_user.records.last
         exercise = Exercise.find_by(id: last_record.id)
         puts "#{last_record.exercise.name}"
-        puts "#{last_record.weight}"
-        puts "#{last_record.sets}"
-        puts "#{last_record.total_reps}"
+        puts "Weight: #{last_record.weight}"
+        puts "Sets: #{last_record.sets}"
+        puts "Total Reps: #{last_record.total_reps}"
     end
-
-#     if 
-#         #if user picks "squats"
-#         #we want to return the objects of exercise class
+    #If 'yes', user is able to see the name of the exercise, weight, sets, 
+    #and total reps of last session
 end
     
-# exercise_info = Exercise.find_by(id: workout) 
-#     # puts exercise_info.name 
-#     #  binding.pry 
-#     #[#<Exercise id: 9, name: "Crunches", category: "Bodyweight", instructions: "https://www.google.com/url?client=internal-element...">]
-    
-# p exercise_info
 
 if selected_exercise == "Create New Exercise"
     exercise_name = prompt.ask("What is the name of the exercise?")
+    #User inputs name of exercise they would like to create
+
     category = prompt.select("What is the exercise category?") do | menu |
         menu.choice "Bodyweight"
         menu.choice "Abs"
@@ -142,17 +163,21 @@ if selected_exercise == "Create New Exercise"
         menu.choice "Lowerbody"
         menu.choice "Kettlebells"
     end
+    #User is prompted to pick an exercise category
+
     instructions = prompt.ask("Please include some instructions?")
     new_exercise = Exercise.create(name: exercise_name, category: category, instructions: instructions)
     create_new_record = prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #User is prompted to include instructions for new exercise
 
     puts "Here is your new exercise!"
     puts "#{new_exercise.name}"
-    puts "#{new_exercise.category}"
-    puts "#{new_exercise.instructions}"
+    puts "Category: #{new_exercise.category}"
+    puts "Instructions: #{new_exercise.instructions}"
+    #Display of chosen exercise
     
     if create_new_record == "Yes"
         weight = prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
@@ -170,31 +195,27 @@ if selected_exercise == "Create New Exercise"
         Record.create(user_id: selected_user.id, exercise_id: new_exercise.id, weight: weight, sets: sets, total_reps: total_reps)
         puts "Your record was saved!"
     end
+    #If user selects 'yes', user will have to input the weight used, sets, and total reps. 
+    #Creates a new record for the user.
 
     view_record = prompt.select("Would you like to view your last record?") do | menu |
         menu.choice "Yes"
         menu.choice "No"
     end
+    #Asks user if they would like to see their last recorded exercise
 
     if view_record == "Yes"
         last_record = selected_user.records.last
         exercise = Exercise.find_by(id: last_record.id)
         puts "#{last_record.exercise.name}"
-        puts "#{last_record.weight}"
-        puts "#{last_record.sets}"
-        puts "#{last_record.total_reps}"
+        puts "Weight: #{last_record.weight}"
+        puts "Sets: #{last_record.sets}"
+        puts "Total Reps: #{last_record.total_reps}"
     end
+    #If 'yes', user is able to see the name of the exercise, weight, sets, 
+    #and total reps of last session
 end
 
-
-    # puts exercise_info.name 
-    # binding.pry 
-    # puts exercise_info.category
-    # puts exercise_info.instructions 
-
-    # we want the user to be able to cheks it records
-# user_records = selected_user.records
-# p user_records
 
 
 
@@ -204,8 +225,6 @@ end
 
 
 
-
-# else
-#     selected_user.exercises 
+ 
 binding.pry 
 0
