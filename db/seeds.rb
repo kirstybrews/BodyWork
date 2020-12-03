@@ -13,5 +13,6 @@ crunch = Exercise.create(name: "Crunches", category: "Bodyweight", instructions:
 record1 = Record.create(user_id: kirsty.id, exercise_id: bw_pull_up.id, weight: 0, sets: 3, total_reps: 15)
 record2 = Record.create(user_id: romina.id, exercise_id: bw_squat.id, weight: 0, sets: 3, total_reps: 45)
 record3 = Record.create(user_id: kirsty.id, exercise_id: crunch.id, weight: 0, sets: 3, total_reps: 45)
+record4 = Record.create(user_id: romina.id, exercise_id: crunch.id, weight: 0, sets: 4, total_reps: 30)
 
 puts "Seeds is running!"

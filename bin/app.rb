@@ -18,21 +18,46 @@ selected_exercise = prompt.select("Which exercises would you like to see?") do |
     menu.choice "My Exercises"
 end
 
-if selected_exercise == "All Exercises"
-    all_exercises = Exercise.all
-    prompt.select("Pick an exercise:") do | menu |
-        all_exercises.each do | exercise |
-            menu.choice exercise.name, exercise.id
+    
+    
+workout = if selected_exercise == "All Exercises"
+        all_exercises = Exercise.all
+        prompt.select("Pick an exercise:") do | menu |
+            all_exercises.each do | exercise |
+                menu.choice exercise.name, exercise.id
+            end
         end
-    end
-elsif selected_exercise == "My Exercises"
-    user_exercises = selected_user.exercises
-    prompt.select("Pick an exercise:") do | menu |
-        user_exercises.each do | exercise |
-            menu.choice exercise.name, exercise.id
+    elsif selected_exercise == "My Exercises"
+        user_exercises = selected_user.exercises
+        prompt.select("Pick an exercise:") do | menu |
+            # binding.pry 
+            user_exercises.each do | exercise |
+                menu.choice exercise.name, exercise.id
+            end
         end
+        #if user picks "squats"
+        #we want to return the objects of exercise class
     end
-end
+    
+    exercise_info = Exercise.find_by(id: workout) 
+    # puts exercise_info.name 
+    
+    #  binding.pry 
+    #[#<Exercise id: 9, name: "Crunches", category: "Bodyweight", instructions: "https://www.google.com/url?client=internal-element...">]
+    
+    p exercise_info
+    # puts exercise_info.name 
+    # binding.pry 
+    # puts exercise_info.category
+    # puts exercise_info.instructions 
+
+    # we want the user to be able to cheks it records 
+
+
+
+    
+
+
 
 
 # else
