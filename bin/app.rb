@@ -69,8 +69,9 @@ def all_exercises
         puts "Instructions: #{exercise.instructions}"
         #Display of chosen exercise
 
-        record = Record.order('id desc').find_by(user_id: @user.id, exercise_id: exercise_id)
-        puts "Last time, you completed #{record.sets} sets and #{record.total_reps} total reps at a weight of #{record.weight}lbs."
+        if record = Record.order('id desc').find_by(user_id: @user.id, exercise_id: exercise_id)
+            puts "Last time, you completed #{record.sets} sets and #{record.total_reps} total reps at a weight of #{record.weight}lbs."
+        end
 
         create_new_record = @prompt.select("Would you like to log your exercise?") do | menu |
             menu.choice "Yes"
