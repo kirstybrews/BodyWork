@@ -35,5 +35,4 @@ class User < ActiveRecord::Base
         puts "Your PR for #{exercise.name} is #{max_weight}lbs."
     end 
 
-
 end 

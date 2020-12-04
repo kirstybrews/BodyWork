@@ -53,7 +53,7 @@ end
 
 #Giving user menu options
 
-def all_exercises   
+def all_exercises
         all_exercises = Exercise.all
         exercise_id = @prompt.select("Pick an exercise:") do | menu |
             all_exercises.each do | exercise |
@@ -68,6 +68,9 @@ def all_exercises
         puts "Category: #{exercise.category}"
         puts "Instructions: #{exercise.instructions}"
         #Display of chosen exercise
+
+        record = Record.order('id desc').find_by(user_id: @user.id, exercise_id: exercise_id)
+        puts "Last time, you completed #{record.sets} sets and #{record.total_reps} total reps at a weight of #{record.weight}lbs."
 
         create_new_record = @prompt.select("Would you like to log your exercise?") do | menu |
             menu.choice "Yes"
@@ -108,9 +111,9 @@ def all_exercises
             puts "Sets: #{last_record.sets}"
             puts "Total Reps: #{last_record.total_reps}"
         end
+        main_menu
         #If 'yes', user is able to see the name of the exercise, weight, sets, 
         #and total reps of last session
-        main_menu
 end
 #
 def my_exercises
@@ -129,6 +132,9 @@ def my_exercises
     puts "Category: #{exercise.category}"
     puts "Instructions: #{exercise.instructions}"
     #Display of chosen exercise
+
+    record = Record.order('id desc').find_by(user_id: @user.id, exercise_id: exercise_id)
+    puts "Last time, you completed #{record.sets} sets and #{record.total_reps} total reps at a weight of #{record.weight}lbs."
 
     create_new_record = @prompt.select("Would you like to log your exercise?") do | menu |
         menu.choice "Yes"
@@ -200,6 +206,11 @@ def create_exercise
     puts "Category: #{new_exercise.category}"
     puts "Instructions: #{new_exercise.instructions}"
     #Display of chosen exercise
+
+    create_new_record = @prompt.select("Would you like to log your exercise?") do | menu |
+        menu.choice "Yes"
+        menu.choice "No"
+    end
     
     if create_new_record == "Yes"
         weight = @prompt.ask("Input the weight amount you used:", convert: :integer) do |q|
@@ -302,3 +313,5 @@ def run
 end
 
 run
+#binding.pry
+0
