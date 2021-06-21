@@ -5,6 +5,7 @@ require "tty-prompt"
 @prompt = TTY::Prompt.new
 @user = nil
 
+#Welcome message to user
 def welcome_message
     puts "~~~~~~~~~~~~~~~~~~~~~~~~~"
     puts "} Welcome to BodyWork! {"
@@ -13,6 +14,7 @@ def welcome_message
     user_input 
 end
 
+#Requiring a user to enter their name
 def user_input
     user_input = @prompt.ask("What is your name?") do |q|
         q.required true
@@ -22,14 +24,14 @@ def user_input
     @user = User.find_name(user_input)
     personalized_message
 end  
-  #Requiring a user to enter their name
 
 #Setting a variable to store our user object
 def personalized_message
     puts "Welcome, #{@user.name}!"
     main_menu
 end
-#Welcome message to user
+
+#Giving user menu options
 def main_menu
     selected_exercise = @prompt.select("What would you like to do?") do | menu |
         menu.choice "See All Exercises"
@@ -46,21 +48,23 @@ def main_menu
         create_exercise
     elsif selected_exercise == "View My Stats"
         stat_menu
-    elsif
+    else
         puts "See you next time!"
     end
 end
 
-#Giving user menu options
+#User is able to view a list of exercises and choose an exercise
+def select_an_exercise(exercise_array)
+    @prompt.select("Pick an exercise:") do | menu |
+        exercise_array.each do | exercise |
+            menu.choice exercise.name, exercise.id
+        end
+    end
+end
 
 def all_exercises
         all_exercises = Exercise.all
-        exercise_id = @prompt.select("Pick an exercise:") do | menu |
-            all_exercises.each do | exercise |
-                menu.choice exercise.name, exercise.id
-            end
-        end
-        #User is able to view a list of all exercises and choose an exercise
+        exercise_id = select_an_exercise(all_exercises)
 
         puts "Here is your chosen exercise:"
         exercise = Exercise.find_by(id: exercise_id)
@@ -116,16 +120,10 @@ def all_exercises
         #If 'yes', user is able to see the name of the exercise, weight, sets, 
         #and total reps of last session
 end
-#
+
 def my_exercises
     user_exercises = @user.exercises.uniq
-    exercise_id = @prompt.select("Pick an exercise:") do | menu | 
-        user_exercises.each do | exercise |
-            menu.choice exercise.name, exercise.id
-        end
-    end
-    #User is able to view a list of exercises they have done in past sessions
-    #and choose an exercise
+    exercise_id = select_an_exercise(user_exercises)
 
     puts "Here is your chosen exercise:"
     exercise = Exercise.find_by(id: exercise_id)
